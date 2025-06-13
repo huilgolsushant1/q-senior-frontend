@@ -11,7 +11,7 @@ import {
   MatRow,
   MatRowDef,
 } from '@angular/material/table';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, map } from 'rxjs';
 import { indicate } from '../../utils';
 import { Security } from '../../models/security';
 import { SecurityService } from '../../services/security.service';
@@ -48,5 +48,14 @@ export class SecuritiesListComponent {
 
   protected securities$: Observable<Security[]> = this._securityService
     .getSecurities({})
-    .pipe(indicate(this.loadingSecurities$));
+    .pipe(
+      indicate(this.loadingSecurities$),
+      // Extract the securities array from the response
+      map((response: { securities: any }) => response.securities)
+    );
 }
+
+/**
+ * Changes made to the original code:
+ * 1. Handled the response from the `getSecurities` method to extract the `securities` array as there was a change in the return type of the method.
+ * */

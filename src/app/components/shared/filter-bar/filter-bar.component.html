@@ -1,0 +1,61 @@
+<div class="filter-container">
+  <div *ngFor="let filter of config" class="filter-item">
+    <mat-form-field *ngIf="filter.type === 'text'" appearance="outline">
+      <mat-label>{{ filter.label }}</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="filters[filter.key]"
+        (ngModelChange)="updateFilters(filter.key, $event)"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      *ngIf="filter.type === 'chip-input'"
+      appearance="outline"
+      class="example-chip-list"
+    >
+      <mat-label>{{ filter.label }}</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Enter values">
+        <mat-chip-row
+          *ngFor="let chip of filters[filter.key]"
+          (removed)="removeChip(filter.key, chip)"
+          [editable]="true"
+        >
+          {{ chip }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        <input
+          placeholder="Add value..."
+          [matChipInputFor]="chipGrid"
+          (matChipInputTokenEnd)="addChip($event, filter.key)"
+        />
+      </mat-chip-grid>
+      <mat-hint>Press Enter after each input</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="filter.type === 'dropdown'" appearance="outline">
+      <mat-label>{{ filter.label }}</mat-label>
+      <mat-select
+        [(ngModel)]="filters[filter.key]"
+        (selectionChange)="updateFilters(filter.key, $event.value)"
+      >
+        <mat-option
+          *ngFor="let option of filter.options"
+          [value]="option.value"
+        >
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox
+      *ngIf="filter.type === 'checkbox'"
+      (change)="updateFilters(filter.key, $event.checked)"
+    >
+      {{ filter.label }}
+    </mat-checkbox>
+  </div>
+</div>

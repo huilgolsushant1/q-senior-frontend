@@ -11,13 +11,15 @@ export class SecurityService {
   /**
    * Get Securities server request mock
    * */
-  getSecurities(securityFilter?: SecuritiesFilter): Observable<Security[]> {
+  getSecurities(
+    securityFilter?: SecuritiesFilter
+  ): Observable<{ securities: Security[]; totalCount: number }> {
     const filteredSecurities = this._filterSecurities(securityFilter).slice(
       securityFilter?.skip ?? 0,
       securityFilter?.limit ?? 100
     );
-
-    return of(filteredSecurities).pipe(delay(1000));
+    const totalCount = this._filterSecurities(securityFilter).length;
+    return of({ securities: filteredSecurities, totalCount }).pipe(delay(1000));
   }
 
   private _filterSecurities(
@@ -39,3 +41,8 @@ export class SecurityService {
     );
   }
 }
+
+/**
+ * Changes made to the original code:
+ * 1. Passing a new parameter called `totalCount` in the return type of `getSecurities` method. This parameter was needed for pagination.
+ * */

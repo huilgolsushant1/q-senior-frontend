@@ -1,6 +1,8 @@
-<!-- Feel free to replace this placeholder with your filterbar -->
 <fieldset class="filter-bar-placeholder">
-  <legend>Filter bar should go here</legend>
+  <app-filter-bar
+    [config]="filterConfig"
+    (filtersChanged)="onFiltersChanged($event)"
+  ></app-filter-bar>
 </fieldset>
 
 <div class="table-wrapper">
@@ -14,4 +16,18 @@
   <table mat-table [dataSource]="dataSource ?? []" class="mat-elevation-z8">
     <ng-content></ng-content>
   </table>
+
+  <mat-paginator
+    [length]="totalCount"
+    [pageSize]="itemsPerPage"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)"
+  >
+  </mat-paginator>
 </div>
+
+<!-- 
+ * Changes made to the original code:
+ * 1. Added the <app-filter-bar> which is the shared filter bar component I created.
+ * 2. Added pagination using <mat-paginator> to handle the pagination of the table.
+  -->
